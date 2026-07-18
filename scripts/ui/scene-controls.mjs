@@ -33,9 +33,21 @@ export function registerSceneControls(controls) {
         title: "TWM.Controls.PlacePin",
         icon: "fas fa-map-pin"
       },
+      route: {
+        name: "route",
+        order: 3,
+        title: "TWM.Controls.DrawRoute",
+        icon: "fas fa-route"
+      },
+      marker: {
+        name: "marker",
+        order: 4,
+        title: "TWM.Controls.PlaceMarker",
+        icon: "fas fa-flag"
+      },
       toggleMap: {
         name: "toggleMap",
-        order: 3,
+        order: 5,
         title: "TWM.Controls.ToggleWorldMap",
         icon: "fas fa-globe",
         button: true,
@@ -52,7 +64,7 @@ export function registerSceneControls(controls) {
       },
       panel: {
         name: "panel",
-        order: 4,
+        order: 6,
         title: "TWM.Controls.OpenPanel",
         icon: "fas fa-sliders",
         button: true,

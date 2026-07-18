@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "node --test \"tools/tests/**/*.test.mjs\"",
-    "release": "node tools/release.mjs"
+    "release": "node tools/release.mjs",
+    "deploy": "node tools/deploy-local.mjs"
   },
   "devDependencies": {
     "@foundryvtt/foundryvtt-cli": "^1.0.3"

@@ -8,6 +8,7 @@ import { WorldMapControlApp } from "./apps/world-map-control.mjs";
 import { initSocket } from "./core/socket-service.mjs";
 import { WorldMapLayer } from "./canvas/world-map-layer.mjs";
 import { registerSceneControls } from "./ui/scene-controls.mjs";
+import { defaultPaceSets } from "./core/pace.mjs";
 
 Hooks.once("init", () => {
   // Custom canvas layer — interface group, so it renders above the scene primitives.
@@ -15,6 +16,14 @@ Hooks.once("init", () => {
     layerClass: WorldMapLayer,
     group: "interface"
   };
+
+  // Editable travel pace sets (world-scoped, managed from the control panel's Paces tab).
+  game.settings.register(MODULE_ID, "paceSets", {
+    scope: "world",
+    config: false,
+    type: Array,
+    default: defaultPaceSets()
+  });
 
   game.settings.registerMenu(MODULE_ID, "worldMapControl", {
     name: "TWM.WorldMapControl.Title",

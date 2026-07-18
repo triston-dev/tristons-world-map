@@ -6,7 +6,7 @@
 // unit-testable against a plain mock per docs/testing-foundry-logic.md; write functions call
 // scene.update() with granular dot-paths so sibling pins are never clobbered.
 
-import { MODULE_ID, PIN_DEFAULTS } from "../config.mjs";
+import { MODULE_ID, PIN_DEFAULTS, ROUTE_DEFAULTS, TRAVEL_DEFAULTS, MAP_CONFIG_DEFAULTS } from "../config.mjs";
 
 /** 16-char alphanumeric id (Foundry-style). crypto.randomUUID exists in browser + node. */
 export function newId() {
@@ -72,4 +72,82 @@ export async function updatePin(scene, id, changes) {
 
 export async function deletePin(scene, id) {
   return scene.update({ [`flags.${MODULE_ID}.pins.-=${id}`]: null });
+}
+
+// ---------------------------------------------------------------------------
+// Map config / routes / travel state / trail
+// ---------------------------------------------------------------------------
+
+export function getMapConfig(scene) {
+  return { ...MAP_CONFIG_DEFAULTS, ...(getMapFlags(scene).mapConfig ?? {}) };
+}
+
+export async function updateMapConfig(scene, changes) {
+  const updates = {};
+  for (const [key, value] of Object.entries(changes)) {
+    updates[`flags.${MODULE_ID}.mapConfig.${key}`] = value;
+  }
+  return scene.update(updates);
+}
+
+export function getRoutes(scene) {
+  return getMapFlags(scene).routes ?? {};
+}
+
+export function getRoute(scene, id) {
+  return getRoutes(scene)[id] ?? null;
+}
+
+/** Normalize raw route input into a complete route object (pure). */
+export function makeRoute(data = {}) {
+  const route = { ...ROUTE_DEFAULTS };
+  for (const key of Object.keys(ROUTE_DEFAULTS)) {
+    if (data[key] !== undefined) route[key] = data[key];
+  }
+  route.id = data.id ?? newId();
+  route.waypoints = (route.waypoints ?? []).map((w) => ({ x: Math.round(w.x), y: Math.round(w.y) }));
+  return route;
+}
+
+export async function createRoute(scene, data) {
+  const route = makeRoute(data);
+  await scene.update({ [`flags.${MODULE_ID}.routes.${route.id}`]: route });
+  return route;
+}
+
+export async function updateRoute(scene, id, changes) {
+  const updates = {};
+  for (const [key, value] of Object.entries(changes)) {
+    updates[`flags.${MODULE_ID}.routes.${id}.${key}`] = value;
+  }
+  return scene.update(updates);
+}
+
+export async function deleteRoute(scene, id) {
+  return scene.update({ [`flags.${MODULE_ID}.routes.-=${id}`]: null });
+}
+
+export function getTravelState(scene) {
+  return { ...TRAVEL_DEFAULTS, ...(getMapFlags(scene).travelState ?? {}) };
+}
+
+export async function updateTravelState(scene, changes) {
+  const updates = {};
+  for (const [key, value] of Object.entries(changes)) {
+    updates[`flags.${MODULE_ID}.travelState.${key}`] = value;
+  }
+  return scene.update(updates);
+}
+
+export function getTrail(scene) {
+  return getMapFlags(scene).trail ?? [];
+}
+
+export async function appendTrail(scene, entry) {
+  const trail = [...getTrail(scene), entry];
+  return scene.update({ [`flags.${MODULE_ID}.trail`]: trail });
+}
+
+export async function clearTrail(scene) {
+  return scene.update({ [`flags.${MODULE_ID}.trail`]: [] });
 }

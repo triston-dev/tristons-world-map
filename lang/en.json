@@ -5,18 +5,72 @@
       "MenuLabel": "World Map Control",
       "MenuHint": "Open the World Map Control window."
     },
-    "twm-control": {
-      "Count": "Count",
-      "ExampleAction": "Example Action"
-    },
     "Controls": {
       "Title": "World Map",
       "Select": "Select / Move Pins",
       "PlacePin": "Place Pin",
+      "DrawRoute": "Draw Route (right-click to finish)",
+      "PlaceMarker": "Place Party Marker",
       "ToggleWorldMap": "Toggle World Map for this Scene",
       "OpenPanel": "Open World Map Control",
       "WorldMapEnabled": "{scene} is now a world map.",
       "WorldMapDisabled": "{scene} is no longer a world map."
+    },
+    "Panel": {
+      "Tabs": {
+        "pins": "Pins",
+        "travel": "Travel",
+        "paces": "Paces",
+        "settings": "Settings"
+      },
+      "EnableMap": "Make this scene a world map",
+      "NotAMap": "This scene is not a world map yet. Enable it above, or switch to a world-map scene.",
+      "NoPins": "No pins on this map yet. Use the Place Pin tool.",
+      "RevealPin": "Reveal to players",
+      "HidePin": "Hide from players",
+      "EditPin": "Edit pin"
+    },
+    "Travel": {
+      "Day": "Day",
+      "NoActiveRoute": "No active route.",
+      "PaceSet": "Pace set",
+      "Pace": "Pace",
+      "TravelOneDay": "Travel 1 day",
+      "TravelNDays": "Travel N days",
+      "Stop": "Stop travel",
+      "TrailEntries": "Trail entries",
+      "ClearTrailTitle": "Clear Travel Trail",
+      "ClearTrailConfirm": "Erase the party's entire travel history trail on this map?",
+      "DayMessage": "The party travels {units} {unitLabel}. (Day {day})",
+      "ArrivedMessage": "The party arrives at the end of \"{route}\"."
+    },
+    "Routes": {
+      "Heading": "Routes",
+      "NoRoutes": "No routes yet. Use the Draw Route tool: left-click waypoints, right-click to finish.",
+      "DefaultName": "Route {n}",
+      "Created": "Route \"{name}\" created.",
+      "Activate": "Set as active route",
+      "Delete": "Delete route",
+      "DeleteTitle": "Delete Route",
+      "DeleteConfirm": "Delete the route \"{name}\"?",
+      "Status": {
+        "planned": "Planned",
+        "proposed": "Proposed",
+        "active": "Active",
+        "done": "Completed"
+      }
+    },
+    "Paces": {
+      "UnitLabel": "Distance unit",
+      "TimeLabel": "Time unit",
+      "NotePlaceholder": "Note (e.g. −5 passive Perception)",
+      "AddSet": "Add custom pace set"
+    },
+    "Settings": {
+      "DistancePerGrid": "Distance per grid square",
+      "UnitLabel": "Distance unit label",
+      "AdvanceWorldTime": "Advance world clock 1 day per travel day",
+      "GridHint": "Scene grid size"
     },
     "Pins": {
       "Unnamed": "Unnamed location",

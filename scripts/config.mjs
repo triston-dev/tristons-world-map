@@ -46,6 +46,43 @@ export const PIN_DEFAULTS = {
   createdBy: null
 };
 
+/** Per-scene map configuration defaults (flags.mapConfig). */
+export const MAP_CONFIG_DEFAULTS = {
+  distancePerGrid: 6,      // map units per grid square
+  unitLabel: "miles",      // display only; pace sets carry their own unit label too
+  advanceWorldTime: false  // call game.time.advance(1 day) per travel day
+};
+
+/** Route statuses. */
+export const ROUTE_STATUS = {
+  PLANNED: "planned",
+  PROPOSED: "proposed",
+  ACTIVE: "active",
+  DONE: "done"
+};
+
+/** Default shape for a new route — see scripts/core/store.mjs makeRoute(). */
+export const ROUTE_DEFAULTS = {
+  name: "",
+  waypoints: [],
+  status: ROUTE_STATUS.PLANNED,
+  proposedBy: null,
+  createdBy: null
+};
+
+/** Travel state defaults (flags.travelState). */
+export const TRAVEL_DEFAULTS = {
+  mode: "marker",          // "marker" | "tokens" (Phase 5)
+  marker: null,            // {x,y} party position, null = not placed
+  navigatorUserId: null,   // Phase 5
+  day: 0,
+  paceSetId: "dnd5e-overland",
+  paceId: "normal",
+  activeRouteId: null,
+  segmentIndex: 0,
+  progressPx: 0
+};
+
 export const config = {
   moduleId: MODULE_ID
 };

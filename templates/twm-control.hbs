@@ -1,38 +1,172 @@
-{{!-- Generalized from tristons-loot-generator templates/history.hbs (whole file, 46 lines) and
-    templates/table-manager.hbs:1-9 (Triston's Loot Generator/) — minimal PARTS.body markup for a
-    standalone ApplicationV2 window (no tab-wrapper root; unlike the sheet-extension overlay this
-    preset is not mounting into an existing dnd5e sheet, so there's no `tab.cssClass`/`tab.id`/
-    `tab.group` container contract to honor).
-
-    TWO KINDS OF `{{...}}` TOKEN IN THIS FILE — same convention as
-    templates/sheet-extension/templates/{{TAB_ID}}.hbs (read that file's header first if this is
-    your first overlay):
-
-    1. SCAFFOLDER PLACEHOLDERS — plain-text find/replace tokens, substituted ONCE at scaffold
-       time, gone from the final file. Written ALL_CAPS_WITH_UNDERSCORES, no leading/trailing
-       space inside the braces: `twm-control`, `twm`, `TWM`,
-       `twmPing`. This filename itself is one: `twm-control.hbs` gets renamed to
-       e.g. `my-app.hbs`.
-
-    2. RUNTIME HANDLEBARS EXPRESSIONS — real Handlebars, evaluated every time this app renders,
-       sourced from `world-map-control.mjs`'s `_prepareContext()` return value. Written
-       lowercase, no underscores: `{{ title }}`, `{{ exampleValue }}`. These are NOT scaffolder
-       placeholders and must survive substitution untouched — a plain-text find/replace of
-       ALL_CAPS_WITH_UNDERSCORES tokens cannot accidentally touch them (different case/shape),
-       but keep the distinction in mind if you hand-edit this file post-scaffold.
-
-    Verify after substitution the same way as the sheet-extension overlay:
-    `grep -F "{{ title }}" <substituted-file>` and `grep -F "{{ exampleValue }}" <substituted-file>`
-    must still find a match. --}}
-<section class="twm-body">
-  <header class="twm-header">
-    <h2>{{ title }}</h2>
+{{!-- World Map Control panel — rendered by WorldMapControlApp. Root is already a <form>
+    (DEFAULT_OPTIONS.tag); inputs save on change, buttons are data-action handlers. --}}
+<div class="twm-body twm-panel">
+  <header class="twm-panel-header">
+    <span class="twm-panel-scene"><i class="fas fa-map"></i> {{ sceneName }}</span>
+    {{#unless enabled}}
+    <button type="button" data-action="twmEnableMap">
+      <i class="fas fa-globe"></i> {{localize "TWM.Panel.EnableMap"}}
+    </button>
+    {{/unless}}
   </header>
 
-  <div class="twm-content">
-    <p>{{localize "TWM.twm-control.Count"}}: {{ exampleValue }}</p>
-    <button type="button" data-action="twmPing">
-      <i class="fas fa-map-location-dot"></i> {{localize "TWM.twm-control.ExampleAction"}}
+  {{#if enabled}}
+  <nav class="twm-tabs">
+    {{#each tabs}}
+    <a data-action="twmTab" data-tab="{{ this.id }}" class="twm-tab {{#if this.active}}active{{/if}}">{{ this.label }}</a>
+    {{/each}}
+  </nav>
+
+  {{#if tabPins}}
+  <section class="twm-tab-body">
+    {{#if pins.length}}
+    <ul class="twm-pin-list">
+      {{#each pins}}
+      <li>
+        <i class="{{ this.typeIcon }}"></i>
+        <span class="twm-pin-name">{{ this.displayName }}</span>
+        <span class="twm-pin-meta">{{ this.typeLabel }} · {{ this.visLabel }}</span>
+        {{#if this.canReveal}}
+        <button type="button" class="twm-icon-btn" data-action="twmTogglePin" data-pin-id="{{ this.id }}"
+                data-tooltip="{{localize 'TWM.Panel.RevealPin'}}"><i class="fas fa-eye"></i></button>
+        {{/if}}
+        {{#if this.canHide}}
+        <button type="button" class="twm-icon-btn" data-action="twmTogglePin" data-pin-id="{{ this.id }}"
+                data-tooltip="{{localize 'TWM.Panel.HidePin'}}"><i class="fas fa-eye-slash"></i></button>
+        {{/if}}
+        <button type="button" class="twm-icon-btn" data-action="twmEditPin" data-pin-id="{{ this.id }}"
+                data-tooltip="{{localize 'TWM.Panel.EditPin'}}"><i class="fas fa-pen"></i></button>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p class="twm-empty">{{localize "TWM.Panel.NoPins"}}</p>
+    {{/if}}
+  </section>
+  {{/if}}
+
+  {{#if tabTravel}}
+  <section class="twm-tab-body">
+    <div class="twm-travel-status">
+      <span><i class="fas fa-calendar-day"></i> {{localize "TWM.Travel.Day"}} {{ travel.day }}</span>
+      {{#if travel.hasActive}}
+      <span><i class="fas fa-route"></i> {{ travel.activeRouteName }}</span>
+      {{#if travel.readout}}
+      <span>{{ travel.readout.remaining }} {{ travel.readout.unitLabel }} · ETA {{ travel.readout.eta }} {{ travel.readout.timeLabel }}(s)</span>
+      {{/if}}
+      {{else}}
+      <span class="twm-empty">{{localize "TWM.Travel.NoActiveRoute"}}</span>
+      {{/if}}
+    </div>
+
+    <div class="twm-travel-controls">
+      <label>{{localize "TWM.Travel.PaceSet"}}
+        <select name="travel.paceSetId">
+          {{#each travel.paceSets}}
+          <option value="{{ this.id }}" {{#if this.selected}}selected{{/if}}>{{ this.name }}</option>
+          {{/each}}
+        </select>
+      </label>
+      <label>{{localize "TWM.Travel.Pace"}}
+        <select name="travel.paceId">
+          {{#each travel.paces}}
+          <option value="{{ this.id }}" {{#if this.selected}}selected{{/if}}>{{ this.label }}</option>
+          {{/each}}
+        </select>
+      </label>
+    </div>
+
+    <div class="twm-travel-actions">
+      <button type="button" data-action="twmTravelDay" data-days="1" {{#unless travel.hasActive}}disabled{{/unless}}>
+        <i class="fas fa-person-hiking"></i> {{localize "TWM.Travel.TravelOneDay"}}
+      </button>
+      <input type="number" name="travelDays" value="3" min="1" max="30" step="1">
+      <button type="button" data-action="twmTravelDay" {{#unless travel.hasActive}}disabled{{/unless}}>
+        <i class="fas fa-forward"></i> {{localize "TWM.Travel.TravelNDays"}}
+      </button>
+      <button type="button" data-action="twmTravelStop" {{#unless travel.hasActive}}disabled{{/unless}}>
+        <i class="fas fa-hand"></i> {{localize "TWM.Travel.Stop"}}
+      </button>
+    </div>
+
+    <h3>{{localize "TWM.Routes.Heading"}}</h3>
+    {{#if routes.length}}
+    <ul class="twm-route-list">
+      {{#each routes}}
+      <li class="{{#if this.isActive}}twm-active-route{{/if}}">
+        <i class="fas fa-route"></i>
+        <span class="twm-pin-name">{{ this.name }}</span>
+        <span class="twm-pin-meta">{{ this.statusLabel }} · {{ this.waypointCount }} pts</span>
+        {{#unless this.isActive}}
+        <button type="button" class="twm-icon-btn" data-action="twmActivateRoute" data-route-id="{{ this.id }}"
+                data-tooltip="{{localize 'TWM.Routes.Activate'}}"><i class="fas fa-play"></i></button>
+        {{/unless}}
+        <button type="button" class="twm-icon-btn" data-action="twmDeleteRoute" data-route-id="{{ this.id }}"
+                data-tooltip="{{localize 'TWM.Routes.Delete'}}"><i class="fas fa-trash"></i></button>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p class="twm-empty">{{localize "TWM.Routes.NoRoutes"}}</p>
+    {{/if}}
+
+    <div class="twm-travel-footer">
+      <span>{{localize "TWM.Travel.TrailEntries"}}: {{ travel.trailLength }}</span>
+      <button type="button" class="twm-icon-btn" data-action="twmClearTrail"
+              data-tooltip="{{localize 'TWM.Travel.ClearTrailTitle'}}"><i class="fas fa-eraser"></i></button>
+    </div>
+  </section>
+  {{/if}}
+
+  {{#if tabPaces}}
+  <section class="twm-tab-body">
+    {{#each paceSets}}
+    <fieldset class="twm-pace-set">
+      <legend>
+        <input type="text" name="paceSets.{{ this.id }}.name" value="{{ this.name }}">
+      </legend>
+      <div class="twm-pace-units">
+        <label>{{localize "TWM.Paces.UnitLabel"}}
+          <input type="text" name="paceSets.{{ this.id }}.unitLabel" value="{{ this.unitLabel }}">
+        </label>
+        <label>{{localize "TWM.Paces.TimeLabel"}}
+          <input type="text" name="paceSets.{{ this.id }}.timeLabel" value="{{ this.timeLabel }}">
+        </label>
+      </div>
+      {{#each this.paces}}
+      <div class="twm-pace-row">
+        <input type="text" name="paceSets.{{ this.setId }}.paces.{{ this.id }}.name" value="{{ this.name }}">
+        <input type="number" name="paceSets.{{ this.setId }}.paces.{{ this.id }}.perDay" value="{{ this.perDay }}" min="0.1" step="any">
+        <input type="text" name="paceSets.{{ this.setId }}.paces.{{ this.id }}.note" value="{{ this.note }}" placeholder="{{localize 'TWM.Paces.NotePlaceholder'}}">
+      </div>
+      {{/each}}
+    </fieldset>
+    {{/each}}
+    <button type="button" data-action="twmAddPaceSet">
+      <i class="fas fa-plus"></i> {{localize "TWM.Paces.AddSet"}}
     </button>
-  </div>
-</section>
+  </section>
+  {{/if}}
+
+  {{#if tabSettings}}
+  <section class="twm-tab-body">
+    <div class="form-group">
+      <label>{{localize "TWM.Settings.DistancePerGrid"}}</label>
+      <input type="number" name="mapConfig.distancePerGrid" value="{{ mapConfig.distancePerGrid }}" min="0.01" step="any">
+    </div>
+    <div class="form-group">
+      <label>{{localize "TWM.Settings.UnitLabel"}}</label>
+      <input type="text" name="mapConfig.unitLabel" value="{{ mapConfig.unitLabel }}">
+    </div>
+    <div class="form-group">
+      <label>{{localize "TWM.Settings.AdvanceWorldTime"}}</label>
+      <input type="checkbox" name="mapConfig.advanceWorldTime" {{#if mapConfig.advanceWorldTime}}checked{{/if}}>
+    </div>
+    <p class="twm-hint">{{localize "TWM.Settings.GridHint"}} ({{ gridSize }}px)</p>
+  </section>
+  {{/if}}
+
+  {{else}}
+  <p class="twm-empty">{{localize "TWM.Panel.NotAMap"}}</p>
+  {{/if}}
+</div>
