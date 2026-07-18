@@ -47,6 +47,16 @@ Hooks.once("init", () => {
     restricted: true
   });
 
+  game.keybindings.register(MODULE_ID, "openPanel", {
+    name: "TWM.Keybindings.OpenPanel",
+    editable: [{ key: "KeyM", modifiers: ["Control", "Shift"] }],
+    restricted: true,
+    onDown: () => {
+      WorldMapControlApp.open();
+      return true;
+    }
+  });
+
   console.log(`${MODULE_ID} | loaded`);
 });
 

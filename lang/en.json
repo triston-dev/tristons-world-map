@@ -188,12 +188,14 @@
       "Fire": "Fire encounter",
       "Skip": "Skip quietly",
       "ChatHeader": "Encounter — {zone}",
-      "ChatHeaderNoTable": "Something stirs in {zone}...",
-      "GmOnly": "Encounter prompts appear for the GM only."
+      "ChatHeaderNoTable": "Something stirs in {zone}..."
     },
     "Perception": {
       "GmHeader": "Party Perception vs DC {dc} ({mode}) — {region}",
       "Revealed": "The party notices something: {name} has been revealed on the map!"
+    },
+    "Keybindings": {
+      "OpenPanel": "Open the World Map Control panel"
     },
     "Intent": {
       "UnknownAction": "Unknown action.",
