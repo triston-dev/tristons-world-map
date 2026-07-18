@@ -1,0 +1,74 @@
+{{!-- Pin config form — rendered by PinConfigApp (scripts/apps/pin-config.mjs).
+    Runtime Handlebars only; the app root is already a <form> (DEFAULT_OPTIONS.tag). --}}
+<div class="twm-pin-config-body">
+  <div class="form-group">
+    <label>{{localize "TWM.PinConfig.Name"}}</label>
+    <input type="text" name="name" value="{{ pin.name }}" placeholder="{{localize 'TWM.Pins.Unnamed'}}" autofocus>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "TWM.PinConfig.Type"}}</label>
+    <select name="type">
+      {{#each types}}
+      <option value="{{ this.key }}" {{#if this.selected}}selected{{/if}}>{{ this.label }}</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "TWM.PinConfig.Visibility"}}</label>
+    <select name="visibility">
+      {{#each visibilities}}
+      <option value="{{ this.key }}" {{#if this.selected}}selected{{/if}}>{{ this.label }}</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "TWM.PinConfig.Image"}}</label>
+    <file-picker name="img" type="image" value="{{ pin.img }}"></file-picker>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "TWM.PinConfig.Blurb"}}</label>
+    <textarea name="blurb" rows="2">{{ pin.blurb }}</textarea>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "TWM.PinConfig.GmNotes"}}</label>
+    <textarea name="gmNotes" rows="2">{{ pin.gmNotes }}</textarea>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "TWM.PinConfig.ClickAction"}}</label>
+    <select name="clickAction">
+      {{#each clickActions}}
+      <option value="{{ this.key }}" {{#if this.selected}}selected{{/if}}>{{ this.label }}</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "TWM.PinConfig.JournalUuid"}}</label>
+    <input type="text" name="journalUuid" value="{{ pin.journalUuid }}" placeholder="JournalEntry.abc...">
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "TWM.PinConfig.SceneUuid"}}</label>
+    <input type="text" name="sceneUuid" value="{{ pin.sceneUuid }}" placeholder="Scene.abc...">
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "TWM.PinConfig.MacroUuid"}}</label>
+    <input type="text" name="macroUuid" value="{{ pin.macroUuid }}" placeholder="Macro.abc...">
+  </div>
+
+  <footer class="twm-pin-config-footer">
+    <button type="submit"><i class="fas fa-save"></i> {{localize "TWM.PinConfig.Save"}}</button>
+    {{#unless isNew}}
+    <button type="button" data-action="twmDeletePin" class="twm-danger">
+      <i class="fas fa-trash"></i> {{localize "TWM.PinConfig.Delete"}}
+    </button>
+    {{/unless}}
+  </footer>
+</div>

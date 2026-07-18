@@ -1,7 +1,116 @@
-/* Starter stylesheet — generalized per docs/module-anatomy.md Step 6 ("styles" capability
-   field), citing both exemplars' single-stylesheet pattern (tristons-transformations
-   styles/ght.css; tristons-loot-generator styles/tlg.css).
+/* Triston's World Map — single-stylesheet pattern per docs/module-anatomy.md Step 6
+   (exemplars: ght.css, tlg.css). Namespace: .twm */
 
-   Scaffolder note: this file is named module.css only as a placeholder. Rename it to match
-   your module's id (e.g. styles/tristons-world-map.css) and update the "styles" array in the
-   module.json you kept (module.private.json or module.public.json) to point at the new path. */
+/* ---------------------------------------------------------------- tooltip */
+
+.twm-tooltip {
+  position: fixed;
+  z-index: 9999;
+  display: none;
+  max-width: 320px;
+  pointer-events: none;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border-dark, #444);
+  border-radius: 6px;
+  background: var(--color-cool-5, rgba(20, 20, 25, 0.92));
+  color: var(--color-text-light-primary, #eee);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  font-size: var(--font-size-13, 13px);
+}
+
+.twm-tooltip.active {
+  display: flex;
+}
+
+.twm-tooltip-img {
+  flex: 0 0 64px;
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border: none;
+  border-radius: 4px;
+}
+
+.twm-tooltip-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.twm-tooltip-text h4 {
+  margin: 0;
+  border: none;
+  font-weight: bold;
+}
+
+.twm-tooltip-type {
+  opacity: 0.7;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.twm-tooltip-text p {
+  margin: 4px 0 0;
+}
+
+.twm-tooltip-discovered {
+  margin-top: 4px;
+  opacity: 0.7;
+  font-style: italic;
+  font-size: 0.85em;
+}
+
+/* ------------------------------------------------------------ pin config */
+
+.twm-pin-config-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px;
+}
+
+.twm-pin-config-body .form-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.twm-pin-config-body .form-group label {
+  flex: 0 0 140px;
+  font-weight: bold;
+}
+
+.twm-pin-config-body .form-group input,
+.twm-pin-config-body .form-group select,
+.twm-pin-config-body .form-group textarea,
+.twm-pin-config-body .form-group file-picker {
+  flex: 1;
+  min-width: 0;
+}
+
+.twm-pin-config-footer {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.twm-pin-config-footer button {
+  flex: 1;
+}
+
+.twm-pin-config-footer .twm-danger {
+  flex: 0 0 auto;
+  color: var(--color-level-error, #c53131);
+}
+
+/* -------------------------------------------------------- control window */
+
+.twm-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+}

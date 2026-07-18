@@ -9,6 +9,59 @@
       "Count": "Count",
       "ExampleAction": "Example Action"
     },
+    "Controls": {
+      "Title": "World Map",
+      "Select": "Select / Move Pins",
+      "PlacePin": "Place Pin",
+      "ToggleWorldMap": "Toggle World Map for this Scene",
+      "OpenPanel": "Open World Map Control",
+      "WorldMapEnabled": "{scene} is now a world map.",
+      "WorldMapDisabled": "{scene} is no longer a world map."
+    },
+    "Pins": {
+      "Unnamed": "Unnamed location",
+      "DiscoveredOn": "Discovered on day {day}",
+      "TravelHereHint": "Ask your GM to travel here."
+    },
+    "PinTypes": {
+      "location": "Location",
+      "city": "Settlement",
+      "dungeon": "Dungeon",
+      "nature": "Natural Feature",
+      "quest": "Quest",
+      "rumor": "Rumor",
+      "player": "Party Mark"
+    },
+    "Visibility": {
+      "gm": "GM Only",
+      "hidden": "Hidden (undiscovered)",
+      "discovered": "Discovered",
+      "visible": "Always Visible"
+    },
+    "ClickActions": {
+      "none": "Nothing",
+      "journal": "Open Journal",
+      "scene": "Open / Travel to Scene",
+      "macro": "Run Macro"
+    },
+    "PinConfig": {
+      "Title": "New Map Pin",
+      "TitleEdit": "Edit Map Pin",
+      "Name": "Name",
+      "Type": "Type",
+      "Visibility": "Visibility",
+      "Image": "Image",
+      "Blurb": "Blurb (players can see this)",
+      "GmNotes": "GM Notes (never shown to players)",
+      "ClickAction": "On Click",
+      "JournalUuid": "Journal UUID",
+      "SceneUuid": "Scene UUID",
+      "MacroUuid": "Macro UUID",
+      "Save": "Save Pin",
+      "Delete": "Delete",
+      "DeleteTitle": "Delete Pin",
+      "DeleteConfirm": "Delete the pin \"{name}\"? This cannot be undone."
+    },
     "Intent": {
       "UnknownAction": "Unknown action.",
       "UnexpectedError": "Something went wrong. Please try again."
