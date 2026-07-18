@@ -116,9 +116,50 @@
       "DeleteTitle": "Delete Pin",
       "DeleteConfirm": "Delete the pin \"{name}\"? This cannot be undone."
     },
+    "EncounterZone": {
+      "FIELDS": {
+        "tableUuid": { "label": "Encounter Roll Table", "hint": "UUID of the RollTable to draw encounters from (drag a table here or paste its UUID)." },
+        "chancePerDay": { "label": "Encounter chance per travel day", "hint": "0–1: probability of an encounter roll each day the party travels through this zone." },
+        "terrainMult": { "label": "Terrain speed multiplier", "hint": "Travel speed multiplier while in this zone (0.5 = half speed). Applied in a later update." },
+        "label": { "label": "Zone label", "hint": "Shown to the GM in encounter prompts; defaults to the region name." }
+      }
+    },
+    "PerceptionTrigger": {
+      "ModePassive": "Passive Perception",
+      "ModeActive": "Active roll",
+      "FIELDS": {
+        "dc": { "label": "Perception DC" },
+        "mode": { "label": "Check mode", "hint": "Passive compares passive Perception; Active rolls for each party member." },
+        "linkedPinId": { "label": "Linked hidden pin id", "hint": "Pin revealed on success (copy the id from the pin list — hover a pin row)." },
+        "once": { "label": "Trigger only once", "hint": "Disable this behavior after the first success." },
+        "revealMessage": { "label": "Success message", "hint": "Optional message posted to all players on success." }
+      }
+    },
+    "Encounters": {
+      "PromptTitle": "Random Encounter",
+      "PromptHeader": "Encounter triggered in {zone} (day {day})!",
+      "NoTable": "No roll table linked — improvise, or skip.",
+      "Fire": "Fire encounter",
+      "Skip": "Skip quietly",
+      "ChatHeader": "Encounter — {zone}",
+      "ChatHeaderNoTable": "Something stirs in {zone}...",
+      "GmOnly": "Encounter prompts appear for the GM only."
+    },
+    "Perception": {
+      "GmHeader": "Party Perception vs DC {dc} ({mode}) — {region}",
+      "Revealed": "The party notices something: {name} has been revealed on the map!"
+    },
     "Intent": {
       "UnknownAction": "Unknown action.",
       "UnexpectedError": "Something went wrong. Please try again."
+    }
+  },
+  "TYPES": {
+    "RegionBehavior": {
+      "tristons-world-map": {
+        "encounterZone": "Encounter Zone (World Map)",
+        "perceptionTrigger": "Perception Trigger (World Map)"
+      }
     }
   }
 }

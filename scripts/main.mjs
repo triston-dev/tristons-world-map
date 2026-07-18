@@ -9,6 +9,9 @@ import { initSocket } from "./core/socket-service.mjs";
 import { WorldMapLayer } from "./canvas/world-map-layer.mjs";
 import { registerSceneControls } from "./ui/scene-controls.mjs";
 import { defaultPaceSets } from "./core/pace.mjs";
+import { EncounterZoneBehavior } from "./regions/encounter-zone-behavior.mjs";
+import { PerceptionTriggerBehavior } from "./regions/perception-trigger-behavior.mjs";
+import { registerDayEvents } from "./core/day-events.mjs";
 
 Hooks.once("init", () => {
   // Custom canvas layer — interface group, so it renders above the scene primitives.
@@ -16,6 +19,19 @@ Hooks.once("init", () => {
     layerClass: WorldMapLayer,
     group: "interface"
   };
+
+  // Custom RegionBehavior sub-types (live-verified pattern: dnd5e registers its own the
+  // same way). Types are declared in module.json documentTypes.
+  Object.assign(CONFIG.RegionBehavior.dataModels, {
+    [`${MODULE_ID}.encounterZone`]: EncounterZoneBehavior,
+    [`${MODULE_ID}.perceptionTrigger`]: PerceptionTriggerBehavior
+  });
+  Object.assign(CONFIG.RegionBehavior.typeIcons, {
+    [`${MODULE_ID}.encounterZone`]: "fa-solid fa-dice",
+    [`${MODULE_ID}.perceptionTrigger`]: "fa-solid fa-eye"
+  });
+
+  registerDayEvents();
 
   // Editable travel pace sets (world-scoped, managed from the control panel's Paces tab).
   game.settings.register(MODULE_ID, "paceSets", {
