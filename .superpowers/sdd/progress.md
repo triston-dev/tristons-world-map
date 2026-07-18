@@ -14,3 +14,4 @@ Phase 4: complete (commit ed73ae7). RegionBehavior sub-types live-verified (hasT
 Phase 5: complete (commit bcb1bd7). Socket intents (createPlayerPin/proposeRoute/moveMarker), navigator, player tools. Two-client live-verified incl. privilege rejection + hidden-pin privacy. NOTE: local two-client testing shares one session cookie — joining as player in a second tab replaces the GM session on reload.
 Phase 6: complete (commit 5ebcbec). Weather/terrain/supplies/quests/chronicle. Live-verified multiplier compounding + chronicle journal.
 Phase 7: polish (keybinding, lang sweep, README usage) + v0.1.0 release build verified (41-file zip, manifest parses).
+Release v0.1.0: https://github.com/triston-dev/tristons-world-map/releases/tag/v0.1.0 (module.json + zip assets, both fetch 200)
