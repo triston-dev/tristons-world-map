@@ -1,0 +1,17 @@
+{
+  "TWM": {
+    "WorldMapControl": {
+      "Title": "World Map Control",
+      "MenuLabel": "World Map Control",
+      "MenuHint": "Open the World Map Control window."
+    },
+    "twm-control": {
+      "Count": "Count",
+      "ExampleAction": "Example Action"
+    },
+    "Intent": {
+      "UnknownAction": "Unknown action.",
+      "UnexpectedError": "Something went wrong. Please try again."
+    }
+  }
+}

@@ -1,0 +1,14 @@
+# Generalized from tristons-transformations .gitignore (Grim Hollow/Tooling/tristons-transformations/.gitignore)
+node_modules/
+release/
+packs/**/*.log
+packs/**/LOCK
+packs/**/LOG
+packs/**/LOG.old
+# Ignore superpowers working files but keep the SDD progress ledger tracked.
+# (Plain ".superpowers/" would ignore the whole dir and make the ledger untrackable —
+# git cannot re-include a file inside an ignored directory, so the dir itself must not match.)
+.superpowers/*
+!.superpowers/sdd/
+.superpowers/sdd/*
+!.superpowers/sdd/progress.md

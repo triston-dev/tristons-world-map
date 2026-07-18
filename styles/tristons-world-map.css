@@ -1,0 +1,7 @@
+/* Starter stylesheet — generalized per docs/module-anatomy.md Step 6 ("styles" capability
+   field), citing both exemplars' single-stylesheet pattern (tristons-transformations
+   styles/ght.css; tristons-loot-generator styles/tlg.css).
+
+   Scaffolder note: this file is named module.css only as a placeholder. Rename it to match
+   your module's id (e.g. styles/tristons-world-map.css) and update the "styles" array in the
+   module.json you kept (module.private.json or module.public.json) to point at the new path. */

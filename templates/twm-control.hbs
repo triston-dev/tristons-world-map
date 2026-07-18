@@ -1,0 +1,38 @@
+{{!-- Generalized from tristons-loot-generator templates/history.hbs (whole file, 46 lines) and
+    templates/table-manager.hbs:1-9 (Triston's Loot Generator/) — minimal PARTS.body markup for a
+    standalone ApplicationV2 window (no tab-wrapper root; unlike the sheet-extension overlay this
+    preset is not mounting into an existing dnd5e sheet, so there's no `tab.cssClass`/`tab.id`/
+    `tab.group` container contract to honor).
+
+    TWO KINDS OF `{{...}}` TOKEN IN THIS FILE — same convention as
+    templates/sheet-extension/templates/{{TAB_ID}}.hbs (read that file's header first if this is
+    your first overlay):
+
+    1. SCAFFOLDER PLACEHOLDERS — plain-text find/replace tokens, substituted ONCE at scaffold
+       time, gone from the final file. Written ALL_CAPS_WITH_UNDERSCORES, no leading/trailing
+       space inside the braces: `twm-control`, `twm`, `TWM`,
+       `twmPing`. This filename itself is one: `twm-control.hbs` gets renamed to
+       e.g. `my-app.hbs`.
+
+    2. RUNTIME HANDLEBARS EXPRESSIONS — real Handlebars, evaluated every time this app renders,
+       sourced from `world-map-control.mjs`'s `_prepareContext()` return value. Written
+       lowercase, no underscores: `{{ title }}`, `{{ exampleValue }}`. These are NOT scaffolder
+       placeholders and must survive substitution untouched — a plain-text find/replace of
+       ALL_CAPS_WITH_UNDERSCORES tokens cannot accidentally touch them (different case/shape),
+       but keep the distinction in mind if you hand-edit this file post-scaffold.
+
+    Verify after substitution the same way as the sheet-extension overlay:
+    `grep -F "{{ title }}" <substituted-file>` and `grep -F "{{ exampleValue }}" <substituted-file>`
+    must still find a match. --}}
+<section class="twm-body">
+  <header class="twm-header">
+    <h2>{{ title }}</h2>
+  </header>
+
+  <div class="twm-content">
+    <p>{{localize "TWM.twm-control.Count"}}: {{ exampleValue }}</p>
+    <button type="button" data-action="twmPing">
+      <i class="fas fa-map-location-dot"></i> {{localize "TWM.twm-control.ExampleAction"}}
+    </button>
+  </div>
+</section>

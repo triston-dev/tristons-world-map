@@ -1,0 +1,44 @@
+{
+  "id": "tristons-world-map",
+  "title": "Triston's World Map",
+  "description": "Turn any scene into a living world map: pins with discovery states, travel paths and history trails, party tracking, region-based random encounters, automated party-wide perception checks, weather, supplies, and an auto-generated travel chronicle.",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "triston-dev"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13.351"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": {
+          "minimum": "5.2",
+          "verified": "5.3.3"
+        }
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/main.mjs"
+  ],
+  "styles": [
+    "styles/tristons-world-map.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "socket": true,
+  "url": "https://github.com/triston-dev/tristons-world-map",
+  "manifest": "https://github.com/triston-dev/tristons-world-map/releases/latest/download/module.json",
+  "download": "https://github.com/triston-dev/tristons-world-map/releases/download/v0.1.0/tristons-world-map-v0.1.0.zip"
+}

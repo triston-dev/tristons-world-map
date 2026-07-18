@@ -1,0 +1,13 @@
+{
+  "//": "Generalized from tristons-transformations package.json:1-9 (Grim Hollow/Tooling/tristons-transformations/package.json) — name/private/type/test/release/devDependency shape. That file also has a 'build' and 'validate' script tied to its own packs-src/ content pipeline; this skeleton omits those (add them back if your scaffold's preset ships compendium packs — see docs/content-and-compendium-packs.md).",
+  "name": "tristons-world-map",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"tools/tests/**/*.test.mjs\"",
+    "release": "node tools/release.mjs"
+  },
+  "devDependencies": {
+    "@foundryvtt/foundryvtt-cli": "^1.0.3"
+  }
+}
