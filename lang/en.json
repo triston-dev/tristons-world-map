@@ -22,6 +22,7 @@
       "Tabs": {
         "pins": "Pins",
         "travel": "Travel",
+        "quests": "Quests",
         "paces": "Paces",
         "settings": "Settings"
       },
@@ -80,7 +81,39 @@
       "DistancePerGrid": "Distance per grid square",
       "UnitLabel": "Distance unit label",
       "AdvanceWorldTime": "Advance world clock 1 day per travel day",
+      "WeatherEnabled": "Roll daily weather while traveling",
+      "ClimateTable": "Custom weather RollTable UUID (optional)",
+      "ClimateTableHint": "tag results like \"Storm [x0.6]\" to slow travel",
+      "ChronicleEnabled": "Auto-write the travel chronicle journal",
       "GridHint": "Scene grid size"
+    },
+    "QuestStatus": {
+      "rumored": "Rumored",
+      "active": "Active",
+      "done": "Completed"
+    },
+    "Quests": {
+      "NoQuests": "No quest or rumor pins on this map yet. Create pins with type Quest or Rumor."
+    },
+    "Weather": {
+      "Changed": "The weather turns: {weather}."
+    },
+    "Supplies": {
+      "Rations": "Rations",
+      "RationsHint": "Set to -1 to disable supply tracking",
+      "PerMember": "Per member/day",
+      "WarnAt": "Warn at",
+      "Warning": "Supplies running low: {rations} rations remain.",
+      "Empty": "The party is out of rations!"
+    },
+    "Chronicle": {
+      "JournalName": "Travel Chronicle — {scene}",
+      "PageName": "Journey Log",
+      "Encounter": "Encounter in {zone}: {result}",
+      "EncounterNoTable": "Encounter in {zone}",
+      "Discovered": "Discovered: {name}",
+      "Weather": "Weather turned: {weather}",
+      "SuppliesEmpty": "Ran out of rations"
     },
     "Pins": {
       "Unnamed": "Unnamed location",
@@ -123,6 +156,7 @@
       "JournalUuid": "Journal UUID",
       "SceneUuid": "Scene UUID",
       "MacroUuid": "Macro UUID",
+      "QuestStatus": "Quest status",
       "Save": "Save Pin",
       "Delete": "Delete",
       "DeleteTitle": "Delete Pin",

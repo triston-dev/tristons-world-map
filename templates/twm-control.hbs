@@ -57,6 +57,22 @@
       {{else}}
       <span class="twm-empty">{{localize "TWM.Travel.NoActiveRoute"}}</span>
       {{/if}}
+      {{#if travel.weather}}
+      <span><i class="fas fa-cloud-sun"></i> {{ travel.weather }}</span>
+      {{/if}}
+    </div>
+
+    <div class="twm-travel-controls twm-supplies">
+      <label>{{localize "TWM.Supplies.Rations"}}
+        <input type="number" name="supplies.rations" value="{{ travel.supplies.rations }}" min="-1" step="1"
+               data-tooltip="{{localize 'TWM.Supplies.RationsHint'}}">
+      </label>
+      <label>{{localize "TWM.Supplies.PerMember"}}
+        <input type="number" name="supplies.perMemberPerDay" value="{{ travel.supplies.perMemberPerDay }}" min="0" step="any">
+      </label>
+      <label>{{localize "TWM.Supplies.WarnAt"}}
+        <input type="number" name="supplies.warnAt" value="{{ travel.supplies.warnAt }}" min="0" step="1">
+      </label>
     </div>
 
     <div class="twm-travel-controls">
@@ -129,6 +145,30 @@
   </section>
   {{/if}}
 
+  {{#if tabQuests}}
+  <section class="twm-tab-body">
+    {{#if questPins.length}}
+    <ul class="twm-pin-list">
+      {{#each questPins}}
+      <li>
+        <i class="{{ this.typeIcon }}"></i>
+        <span class="twm-pin-name">{{ this.displayName }}</span>
+        <select name="questPins.{{ this.id }}.questStatus" class="twm-quest-status">
+          {{#each this.statuses}}
+          <option value="{{ this.key }}" {{#if this.selected}}selected{{/if}}>{{ this.label }}</option>
+          {{/each}}
+        </select>
+        <button type="button" class="twm-icon-btn" data-action="twmEditPin" data-pin-id="{{ this.id }}"
+                data-tooltip="{{localize 'TWM.Panel.EditPin'}}"><i class="fas fa-pen"></i></button>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p class="twm-empty">{{localize "TWM.Quests.NoQuests"}}</p>
+    {{/if}}
+  </section>
+  {{/if}}
+
   {{#if tabPaces}}
   <section class="twm-tab-body">
     {{#each paceSets}}
@@ -172,6 +212,19 @@
     <div class="form-group">
       <label>{{localize "TWM.Settings.AdvanceWorldTime"}}</label>
       <input type="checkbox" name="mapConfig.advanceWorldTime" {{#if mapConfig.advanceWorldTime}}checked{{/if}}>
+    </div>
+    <div class="form-group">
+      <label>{{localize "TWM.Settings.WeatherEnabled"}}</label>
+      <input type="checkbox" name="mapConfig.weatherEnabled" {{#if mapConfig.weatherEnabled}}checked{{/if}}>
+    </div>
+    <div class="form-group">
+      <label>{{localize "TWM.Settings.ClimateTable"}}</label>
+      <input type="text" name="mapConfig.climateTableUuid" value="{{ mapConfig.climateTableUuid }}"
+             placeholder="RollTable.abc... {{localize 'TWM.Settings.ClimateTableHint'}}">
+    </div>
+    <div class="form-group">
+      <label>{{localize "TWM.Settings.ChronicleEnabled"}}</label>
+      <input type="checkbox" name="mapConfig.chronicleEnabled" {{#if mapConfig.chronicleEnabled}}checked{{/if}}>
     </div>
     <p class="twm-hint">{{localize "TWM.Settings.GridHint"}} ({{ gridSize }}px)</p>
   </section>

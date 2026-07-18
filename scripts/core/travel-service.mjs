@@ -14,6 +14,20 @@ import {
 } from "./store.mjs";
 import { tickDay, routeReadout } from "./travel-engine.mjs";
 import { normalizePaceSets } from "./pace.mjs";
+import { runDayPipeline } from "./day-events.mjs";
+import { regionsOnPath, moduleBehaviors } from "./region-query.mjs";
+
+/** Combined terrain speed multiplier from encounter zones containing a point. */
+function terrainMultAt(scene, point) {
+  if (!point) return 1;
+  let mult = 1;
+  for (const region of regionsOnPath(scene, point, point)) {
+    for (const behavior of moduleBehaviors(region, "encounterZone")) {
+      mult *= behavior.system.terrainMult ?? 1;
+    }
+  }
+  return mult;
+}
 
 export function getPaceSets() {
   return normalizePaceSets(game.settings.get(MODULE_ID, "paceSets"));
@@ -81,7 +95,8 @@ export async function travelDays(scene, n = 1) {
       route,
       gridPx: scene.grid.size,
       mapConfig,
-      paceSets: getPaceSets()
+      paceSets: getPaceSets(),
+      extraSpeedMult: terrainMultAt(scene, state.marker)
     });
 
     await updateTravelState(scene, result.travelState);
@@ -98,9 +113,11 @@ export async function travelDays(scene, n = 1) {
       from: result.moved.from,
       to: result.moved.to,
       moved: result.moved,
-      travelState: result.travelState
+      travelState: result.travelState,
+      events: []
     };
-    Hooks.callAll(`${MODULE_ID}.travelDay`, context);
+    Hooks.callAll(`${MODULE_ID}.travelDay`, context); // third-party listeners (sync)
+    await runDayPipeline(context); // this module's own awaited pipeline
     results.push(context);
 
     const paceSets = getPaceSets();

@@ -48,10 +48,16 @@ export const PIN_DEFAULTS = {
 
 /** Per-scene map configuration defaults (flags.mapConfig). */
 export const MAP_CONFIG_DEFAULTS = {
-  distancePerGrid: 6,      // map units per grid square
-  unitLabel: "miles",      // display only; pace sets carry their own unit label too
-  advanceWorldTime: false  // call game.time.advance(1 day) per travel day
+  distancePerGrid: 6,       // map units per grid square
+  unitLabel: "miles",       // display only; pace sets carry their own unit label too
+  advanceWorldTime: false,  // call game.time.advance(1 day) per travel day
+  weatherEnabled: false,    // daily weather roll (built-in table or climateTableUuid)
+  climateTableUuid: "",     // optional custom weather RollTable ("Storm [x0.6]" tag = speed)
+  chronicleEnabled: false   // auto-write the travel chronicle journal
 };
+
+/** Quest statuses for quest/rumor pins. */
+export const QUEST_STATUSES = ["rumored", "active", "done"];
 
 /** Route statuses. */
 export const ROUTE_STATUS = {

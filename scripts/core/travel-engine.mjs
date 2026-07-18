@@ -15,12 +15,13 @@ import { getPaceSet, getPace } from "./pace.mjs";
  * @param {number} args.gridPx       scene grid size in px
  * @param {object} args.mapConfig    {distancePerGrid, unitLabel}
  * @param {Array}  args.paceSets     normalized pace sets
+ * @param {number} [args.extraSpeedMult]  additional multiplier (terrain zones, Phase 6)
  * @returns {{travelState, moved: {from, to, px, units}, finished: boolean}}
  */
-export function tickDay({ travelState, route, gridPx, mapConfig, paceSets }) {
+export function tickDay({ travelState, route, gridPx, mapConfig, paceSets, extraSpeedMult = 1 }) {
   const paceSet = getPaceSet(paceSets, travelState.paceSetId);
   const pace = getPace(paceSet, travelState.paceId);
-  const speedMult = travelState.weather?.speedMult ?? 1;
+  const speedMult = (travelState.weather?.speedMult ?? 1) * extraSpeedMult;
   const perDayPx = unitsToPx(pace.perDay * speedMult, gridPx, mapConfig.distancePerGrid);
 
   const from = positionAlong(route.waypoints, travelState.segmentIndex ?? 0, travelState.progressPx ?? 0);

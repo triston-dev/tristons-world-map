@@ -80,7 +80,7 @@ export class WorldMapControlApp extends HandlebarsApplicationMixin(ApplicationV2
   async _prepareContext() {
     const scene = this.scene;
     const enabled = scene ? isWorldMap(scene) : false;
-    const tabs = ["pins", "travel", "paces", "settings"].map((id) => ({
+    const tabs = ["pins", "travel", "quests", "paces", "settings"].map((id) => ({
       id,
       label: game.i18n.localize(`TWM.Panel.Tabs.${id}`),
       active: this.activeTab === id
@@ -92,6 +92,7 @@ export class WorldMapControlApp extends HandlebarsApplicationMixin(ApplicationV2
       tabs,
       tabPins: this.activeTab === "pins",
       tabTravel: this.activeTab === "travel",
+      tabQuests: this.activeTab === "quests",
       tabPaces: this.activeTab === "paces",
       tabSettings: this.activeTab === "settings"
     };
@@ -152,6 +153,28 @@ export class WorldMapControlApp extends HandlebarsApplicationMixin(ApplicationV2
       };
     }
 
+    if (context.tabTravel) {
+      context.travel.supplies = state.supplies ?? { rations: -1, perMemberPerDay: 1, warnAt: 5 };
+      context.travel.suppliesOn = Number(context.travel.supplies.rations) >= 0;
+      context.travel.weather = state.weather?.current ?? null;
+    }
+
+    if (context.tabQuests) {
+      const { QUEST_STATUSES } = await import("../config.mjs");
+      context.questPins = Object.values(getPins(scene))
+        .filter((p) => p.type === "quest" || p.type === "rumor")
+        .map((pin) => ({
+          ...pin,
+          displayName: pin.name || game.i18n.localize("TWM.Pins.Unnamed"),
+          typeIcon: (PIN_TYPES[pin.type] ?? PIN_TYPES.location).icon,
+          statuses: ["", ...QUEST_STATUSES].map((s) => ({
+            key: s,
+            label: s ? game.i18n.localize(`TWM.QuestStatus.${s}`) : "—",
+            selected: (pin.questStatus ?? "") === s
+          }))
+        }));
+    }
+
     if (context.tabPaces) {
       context.paceSets = paceSets.map((s) => ({
         ...s,
@@ -180,8 +203,27 @@ export class WorldMapControlApp extends HandlebarsApplicationMixin(ApplicationV2
       await updateMapConfig(scene, {
         distancePerGrid: Number(data.mapConfig.distancePerGrid) || 1,
         unitLabel: String(data.mapConfig.unitLabel || "miles"),
-        advanceWorldTime: Boolean(data.mapConfig.advanceWorldTime)
+        advanceWorldTime: Boolean(data.mapConfig.advanceWorldTime),
+        weatherEnabled: Boolean(data.mapConfig.weatherEnabled),
+        chronicleEnabled: Boolean(data.mapConfig.chronicleEnabled),
+        climateTableUuid: String(data.mapConfig.climateTableUuid ?? "")
       });
+    }
+    if (data.supplies) {
+      await updateTravelState(scene, {
+        supplies: {
+          rations: Number(data.supplies.rations),
+          perMemberPerDay: Number(data.supplies.perMemberPerDay) || 1,
+          warnAt: Number(data.supplies.warnAt) || 0
+        }
+      });
+    }
+    if (data.questPins) {
+      for (const [pinId, edits] of Object.entries(data.questPins)) {
+        if (edits?.questStatus !== undefined) {
+          await updatePin(scene, pinId, { questStatus: edits.questStatus || null });
+        }
+      }
     }
     if (data.travel) {
       const changes = {};

@@ -2,7 +2,7 @@
 // docs/application-v2-apps.md "Instance tracking — Map-keyed"). GM-only: only ever opened
 // from GM-gated paths (layer pin tool, pin right-click, control panel).
 
-import { MODULE_ID, PIN_TYPES, VISIBILITY, PIN_CLICK_ACTIONS } from "../config.mjs";
+import { MODULE_ID, PIN_TYPES, VISIBILITY, PIN_CLICK_ACTIONS, QUEST_STATUSES } from "../config.mjs";
 import { makePin, getPin, createPin, updatePin, deletePin } from "../core/store.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -101,12 +101,18 @@ export class PinConfigApp extends HandlebarsApplicationMixin(ApplicationV2) {
         key: a,
         label: game.i18n.localize(`TWM.ClickActions.${a}`),
         selected: pin.clickAction === a
+      })),
+      questStatuses: ["", ...QUEST_STATUSES].map((s) => ({
+        key: s,
+        label: s ? game.i18n.localize(`TWM.QuestStatus.${s}`) : "—",
+        selected: (pin.questStatus ?? "") === s
       }))
     };
   }
 
   static async #onSubmit(_event, _form, formData) {
     const data = foundry.utils.expandObject(formData.object);
+    if (data.questStatus !== undefined) data.questStatus = data.questStatus || null;
     if (this.pin) await updatePin(this.scene, this.pin.id, data);
     else await createPin(this.scene, { ...this.initial, ...data });
   }

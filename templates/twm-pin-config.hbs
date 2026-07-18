@@ -40,6 +40,15 @@
   </div>
 
   <div class="form-group">
+    <label>{{localize "TWM.PinConfig.QuestStatus"}}</label>
+    <select name="questStatus">
+      {{#each questStatuses}}
+      <option value="{{ this.key }}" {{#if this.selected}}selected{{/if}}>{{ this.label }}</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="form-group">
     <label>{{localize "TWM.PinConfig.ClickAction"}}</label>
     <select name="clickAction">
       {{#each clickActions}}
