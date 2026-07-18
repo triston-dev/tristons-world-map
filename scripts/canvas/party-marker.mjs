@@ -1,5 +1,8 @@
-// The shared party marker: a banner/flag PIXI sprite at travelState.marker. GM can drag it
-// anywhere (repositioning the party off-route); players see it read-only.
+// The shared party marker: a banner/flag PIXI sprite at travelState.marker. The GM — or the
+// designated navigator player — can drag it; everyone else sees it read-only. Navigator
+// drops route through the moveMarker socket intent (GM-authoritative).
+
+import { getTravelState } from "../core/store.mjs";
 
 export class PartyMarker extends PIXI.Container {
   /**
@@ -12,7 +15,8 @@ export class PartyMarker extends PIXI.Container {
     this.position.set(pos.x, pos.y);
     this.#size = Math.max(28, Math.round((canvas.dimensions?.size ?? 100) * 0.55));
     this.#draw();
-    if (game.user.isGM) {
+    const isNavigator = getTravelState(layer.scene).navigatorUserId === game.user.id;
+    if (game.user.isGM || isNavigator) {
       this.eventMode = "static";
       this.cursor = "grab";
       this.hitArea = new PIXI.Rectangle(-this.#size * 0.4, -this.#size, this.#size * 1.1, this.#size * 1.1);
@@ -69,6 +73,16 @@ export class PartyMarker extends PIXI.Container {
       canvas.stage.off("pointermove", this.#moveListener);
       this.#moveListener = null;
     }
-    await this.layer.persistMarkerPosition(this.position.x, this.position.y);
+    if (game.user.isGM) {
+      await this.layer.persistMarkerPosition(this.position.x, this.position.y);
+      return;
+    }
+    // Navigator: request the move; the flag update re-renders the marker authoritatively.
+    const { sendIntent } = await import("../core/socket-service.mjs");
+    await sendIntent("moveMarker", {
+      sceneId: this.layer.scene.id,
+      x: Math.round(this.position.x),
+      y: Math.round(this.position.y)
+    });
   }
 }

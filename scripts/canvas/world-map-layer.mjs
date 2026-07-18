@@ -100,13 +100,17 @@ export class WorldMapLayer extends foundry.canvas.layers.InteractionLayer {
   // -------------------------------------------------------------------------
 
   _onClickLeft(event) {
-    if (!game.user.isGM) return;
     const tool = game.activeTool;
     const pos = event.interactionData?.origin ?? event.getLocalPosition(canvas.stage);
     const point = { x: Math.round(pos.x), y: Math.round(pos.y) };
+    const isGM = game.user.isGM;
 
-    if (tool === "pin") {
+    if (tool === "pin" && isGM) {
       PinConfigApp.openForNew(this.scene, point);
+      return;
+    }
+    if (tool === "playerPin" && !isGM) {
+      this.#promptPlayerPin(point);
       return;
     }
     if (tool === "route") {
@@ -115,7 +119,7 @@ export class WorldMapLayer extends foundry.canvas.layers.InteractionLayer {
       renderRoutes(this.routeContainer, getRoutes(this.scene), this.routeDraft);
       return;
     }
-    if (tool === "marker") {
+    if (tool === "marker" && isGM) {
       updateTravelState(this.scene, { marker: point });
       return;
     }
@@ -123,7 +127,6 @@ export class WorldMapLayer extends foundry.canvas.layers.InteractionLayer {
 
   /** Right-click with the route tool: finish (≥2 points) or cancel the draft. */
   _onClickRight(_event) {
-    if (!game.user.isGM) return;
     if (game.activeTool !== "route" || !this.routeDraft) return;
     this.finishRouteDraft();
   }
@@ -135,6 +138,16 @@ export class WorldMapLayer extends foundry.canvas.layers.InteractionLayer {
       this.refresh();
       return null;
     }
+    if (!game.user.isGM) {
+      // Players: proposal via the GM-authoritative intent queue.
+      const { sendIntent } = await import("../core/socket-service.mjs");
+      const name = await this.#promptText("TWM.Routes.ProposeNameTitle", "TWM.Routes.ProposeNameLabel");
+      this.refresh();
+      if (name === null) return null;
+      await sendIntent("proposeRoute", { sceneId: this.scene.id, waypoints: draft, name });
+      ui.notifications.info(game.i18n.localize("TWM.Routes.ProposalSent"));
+      return null;
+    }
     const count = Object.keys(getRoutes(this.scene)).length + 1;
     const route = await createRoute(this.scene, {
       name: game.i18n.format("TWM.Routes.DefaultName", { n: count }),
@@ -143,6 +156,38 @@ export class WorldMapLayer extends foundry.canvas.layers.InteractionLayer {
     });
     ui.notifications.info(game.i18n.format("TWM.Routes.Created", { name: route.name }));
     return route;
+  }
+
+  /** Player pin drop: small name/note prompt then a createPlayerPin intent. */
+  async #promptPlayerPin(point) {
+    const result = await foundry.applications.api.DialogV2.prompt({
+      window: { title: game.i18n.localize("TWM.Pins.PlayerPinTitle") },
+      content: `
+        <div class="form-group"><label>${game.i18n.localize("TWM.PinConfig.Name")}</label>
+        <input type="text" name="name" autofocus></div>
+        <div class="form-group"><label>${game.i18n.localize("TWM.PinConfig.Blurb")}</label>
+        <textarea name="blurb" rows="2"></textarea></div>`,
+      ok: {
+        label: game.i18n.localize("TWM.Pins.PlayerPinDrop"),
+        callback: (_event, button) => ({
+          name: button.form.elements.name.value,
+          blurb: button.form.elements.blurb.value
+        })
+      }
+    }).catch(() => null);
+    if (!result) return;
+    const { sendIntent } = await import("../core/socket-service.mjs");
+    await sendIntent("createPlayerPin", { sceneId: this.scene.id, x: point.x, y: point.y, ...result });
+  }
+
+  /** Minimal single-text-input prompt; resolves null on cancel. */
+  async #promptText(titleKey, labelKey) {
+    return foundry.applications.api.DialogV2.prompt({
+      window: { title: game.i18n.localize(titleKey) },
+      content: `<div class="form-group"><label>${game.i18n.localize(labelKey)}</label>
+        <input type="text" name="value" autofocus></div>`,
+      ok: { callback: (_event, button) => button.form.elements.value.value }
+    }).catch(() => null);
   }
 
   cancelRouteDraft() {

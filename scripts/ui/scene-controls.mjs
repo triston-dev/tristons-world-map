@@ -8,7 +8,10 @@ import { isWorldMap, setWorldMapEnabled } from "../core/store.mjs";
 import { WorldMapControlApp } from "../apps/world-map-control.mjs";
 
 export function registerSceneControls(controls) {
-  if (!game.user.isGM) return; // Phase 2: editing tools are GM-only; players see pins regardless.
+  if (!game.user.isGM) {
+    registerPlayerControls(controls);
+    return;
+  }
 
   controls[LAYER_NAME] = {
     name: LAYER_NAME,
@@ -69,6 +72,41 @@ export function registerSceneControls(controls) {
         icon: "fas fa-sliders",
         button: true,
         onChange: () => WorldMapControlApp.open()
+      }
+    }
+  };
+}
+
+/** Players: propose routes + drop party marks (both route through GM socket intents). */
+function registerPlayerControls(controls) {
+  controls[LAYER_NAME] = {
+    name: LAYER_NAME,
+    order: 90,
+    title: "TWM.Controls.Title",
+    icon: "fas fa-map-location-dot",
+    activeTool: "select",
+    onChange: (_event, active) => {
+      if (active) canvas[LAYER_NAME]?.activate();
+    },
+    onToolChange: () => {},
+    tools: {
+      select: {
+        name: "select",
+        order: 1,
+        title: "TWM.Controls.Select",
+        icon: "fas fa-expand"
+      },
+      playerPin: {
+        name: "playerPin",
+        order: 2,
+        title: "TWM.Controls.PlayerPin",
+        icon: "fas fa-thumbtack"
+      },
+      route: {
+        name: "route",
+        order: 3,
+        title: "TWM.Controls.ProposeRoute",
+        icon: "fas fa-route"
       }
     }
   };

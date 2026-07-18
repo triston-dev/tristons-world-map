@@ -11,6 +11,8 @@
       "PlacePin": "Place Pin",
       "DrawRoute": "Draw Route (right-click to finish)",
       "PlaceMarker": "Place Party Marker",
+      "PlayerPin": "Drop a Party Mark",
+      "ProposeRoute": "Propose Route (right-click to finish)",
       "ToggleWorldMap": "Toggle World Map for this Scene",
       "OpenPanel": "Open World Map Control",
       "WorldMapEnabled": "{scene} is now a world map.",
@@ -38,6 +40,8 @@
       "TravelOneDay": "Travel 1 day",
       "TravelNDays": "Travel N days",
       "Stop": "Stop travel",
+      "Navigator": "Navigator (may move the marker)",
+      "NoNavigator": "— none —",
       "TrailEntries": "Trail entries",
       "ClearTrailTitle": "Clear Travel Trail",
       "ClearTrailConfirm": "Erase the party's entire travel history trail on this map?",
@@ -50,7 +54,13 @@
       "DefaultName": "Route {n}",
       "Created": "Route \"{name}\" created.",
       "Activate": "Set as active route",
+      "Approve": "Approve proposal",
       "Delete": "Delete route",
+      "ProposedDefaultName": "Proposed route",
+      "ProposedNotify": "{user} proposed a route: \"{name}\" — see the Travel tab.",
+      "ProposeNameTitle": "Propose a Route",
+      "ProposeNameLabel": "Route name",
+      "ProposalSent": "Route proposal sent to the GM.",
       "DeleteTitle": "Delete Route",
       "DeleteConfirm": "Delete the route \"{name}\"?",
       "Status": {
@@ -75,7 +85,9 @@
     "Pins": {
       "Unnamed": "Unnamed location",
       "DiscoveredOn": "Discovered on day {day}",
-      "TravelHereHint": "Ask your GM to travel here."
+      "TravelHereHint": "Ask your GM to travel here.",
+      "PlayerPinTitle": "Drop a Party Mark",
+      "PlayerPinDrop": "Drop mark"
     },
     "PinTypes": {
       "location": "Location",
@@ -151,7 +163,13 @@
     },
     "Intent": {
       "UnknownAction": "Unknown action.",
-      "UnexpectedError": "Something went wrong. Please try again."
+      "UnexpectedError": "Something went wrong. Please try again.",
+      "NoScene": "That scene no longer exists.",
+      "NotAMap": "That scene is not a world map.",
+      "BadPayload": "Invalid request.",
+      "PinCapReached": "You have reached your party-mark limit on this map.",
+      "NotNavigator": "Only the designated navigator can move the party marker.",
+      "NoGM": "No GM is connected — try again when your GM is online."
     }
   },
   "TYPES": {

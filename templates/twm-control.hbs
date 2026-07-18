@@ -74,6 +74,13 @@
           {{/each}}
         </select>
       </label>
+      <label>{{localize "TWM.Travel.Navigator"}}
+        <select name="travel.navigatorUserId">
+          {{#each travel.navigators}}
+          <option value="{{ this.id }}" {{#if this.selected}}selected{{/if}}>{{ this.name }}</option>
+          {{/each}}
+        </select>
+      </label>
     </div>
 
     <div class="twm-travel-actions">
@@ -96,7 +103,11 @@
       <li class="{{#if this.isActive}}twm-active-route{{/if}}">
         <i class="fas fa-route"></i>
         <span class="twm-pin-name">{{ this.name }}</span>
-        <span class="twm-pin-meta">{{ this.statusLabel }} · {{ this.waypointCount }} pts</span>
+        <span class="twm-pin-meta">{{ this.statusLabel }}{{#if this.proposerName}} ({{ this.proposerName }}){{/if}} · {{ this.waypointCount }} pts</span>
+        {{#if this.isProposed}}
+        <button type="button" class="twm-icon-btn" data-action="twmApproveRoute" data-route-id="{{ this.id }}"
+                data-tooltip="{{localize 'TWM.Routes.Approve'}}"><i class="fas fa-check"></i></button>
+        {{/if}}
         {{#unless this.isActive}}
         <button type="button" class="twm-icon-btn" data-action="twmActivateRoute" data-route-id="{{ this.id }}"
                 data-tooltip="{{localize 'TWM.Routes.Activate'}}"><i class="fas fa-play"></i></button>

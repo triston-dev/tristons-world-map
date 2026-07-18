@@ -48,6 +48,7 @@ export class WorldMapControlApp extends HandlebarsApplicationMixin(ApplicationV2
       twmEditPin: WorldMapControlApp.#onEditPin,
       twmTogglePin: WorldMapControlApp.#onTogglePin,
       twmActivateRoute: WorldMapControlApp.#onActivateRoute,
+      twmApproveRoute: WorldMapControlApp.#onApproveRoute,
       twmDeleteRoute: WorldMapControlApp.#onDeleteRoute,
       twmTravelDay: WorldMapControlApp.#onTravelDay,
       twmTravelStop: WorldMapControlApp.#onTravelStop,
@@ -119,6 +120,8 @@ export class WorldMapControlApp extends HandlebarsApplicationMixin(ApplicationV2
         ...r,
         statusLabel: game.i18n.localize(`TWM.Routes.Status.${r.status}`),
         isActive: r.status === ROUTE_STATUS.ACTIVE,
+        isProposed: r.status === ROUTE_STATUS.PROPOSED,
+        proposerName: r.proposedBy ? (game.users.get(r.proposedBy)?.name ?? "?") : null,
         waypointCount: r.waypoints.length
       }));
       context.travel = {
@@ -134,6 +137,12 @@ export class WorldMapControlApp extends HandlebarsApplicationMixin(ApplicationV2
           eta: Number.isFinite(readout.eta) ? readout.eta : "—",
           timeLabel: readout.timeLabel
         } : null,
+        navigators: [
+          { id: "", name: game.i18n.localize("TWM.Travel.NoNavigator"), selected: !state.navigatorUserId },
+          ...game.users.filter((u) => !u.isGM).map((u) => ({
+            id: u.id, name: u.name, selected: state.navigatorUserId === u.id
+          }))
+        ],
         paceSets: paceSets.map((s) => ({ id: s.id, name: s.name, selected: s.id === state.paceSetId })),
         paces: activeSet.paces.map((p) => ({
           id: p.id,
@@ -178,6 +187,9 @@ export class WorldMapControlApp extends HandlebarsApplicationMixin(ApplicationV2
       const changes = {};
       if (data.travel.paceSetId) changes.paceSetId = data.travel.paceSetId;
       if (data.travel.paceId) changes.paceId = data.travel.paceId;
+      if (data.travel.navigatorUserId !== undefined) {
+        changes.navigatorUserId = data.travel.navigatorUserId || null;
+      }
       if (Object.keys(changes).length) await updateTravelState(scene, changes);
     }
     if (data.paceSets) {
@@ -231,6 +243,12 @@ export class WorldMapControlApp extends HandlebarsApplicationMixin(ApplicationV2
 
   static async #onActivateRoute(_event, target) {
     await startRoute(this.scene, target.dataset.routeId);
+    this.render();
+  }
+
+  static async #onApproveRoute(_event, target) {
+    const { updateRoute } = await import("../core/store.mjs");
+    await updateRoute(this.scene, target.dataset.routeId, { status: ROUTE_STATUS.PLANNED });
     this.render();
   }
 
